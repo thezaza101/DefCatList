@@ -106,14 +106,26 @@ func init() {
 	dao.Connect()
 }
 
+func routerHandlerFunc(router *mux.Router) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		router.ServeHTTP(res, req)
+	}
+}
+
+func router() *mux.Router {
+	router := mux.NewRouter()
+	router.HandleFunc("/lists", AllListsEndPoint).Methods("GET")
+	router.HandleFunc("/lists", CreateListEndPoint).Methods("POST")
+	router.HandleFunc("/lists", UpdateListEndPoint).Methods("PUT")
+	router.HandleFunc("/lists", DeleteListEndPoint).Methods("DELETE")
+	router.HandleFunc("/lists/{id}", FindListEndpoint).Methods("GET")
+	return router
+}
+
 func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/lists", AllListsEndPoint).Methods("GET")
-	r.HandleFunc("/lists", CreateListEndPoint).Methods("POST")
-	r.HandleFunc("/lists", UpdateListEndPoint).Methods("PUT")
-	r.HandleFunc("/lists", DeleteListEndPoint).Methods("DELETE")
-	r.HandleFunc("/lists/{id}", FindListEndpoint).Methods("GET")
-	if err := http.ListenAndServe(":"+os.Getenv("PORT"), r); err != nil {
-		log.Fatal(err)
+	handler := routerHandlerFunc(router())
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), handler)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
 	}
 }
