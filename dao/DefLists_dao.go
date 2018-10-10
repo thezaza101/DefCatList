@@ -32,7 +32,7 @@ func (m *DefListsDAO) Connect() {
 // Find list of deflist
 func (m *DefListsDAO) FindAll() ([]DefList, error) {
 	var deflists []DefList
-	err := db.C(COLLECTION).Find(bson.M{}).All(&deflists)
+	err := db.C(COLLECTION).Find(bson.M{"security": "Public"}).All(&deflists)
 	return deflists, err
 }
 
