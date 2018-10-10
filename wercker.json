@@ -1,0 +1,7 @@
+{
+    "pre-install" : [
+        "mkdir -p $HOME/go/src",
+        "export GOPATH=$HOME/go",
+        "go get ./"
+    ]
+}
