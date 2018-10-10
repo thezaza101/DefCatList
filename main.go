@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	. "./config"
 	. "./dao"
@@ -106,14 +107,13 @@ func init() {
 }
 
 func main() {
-
 	r := mux.NewRouter()
 	r.HandleFunc("/lists", AllListsEndPoint).Methods("GET")
 	r.HandleFunc("/lists", CreateListEndPoint).Methods("POST")
 	r.HandleFunc("/lists", UpdateListEndPoint).Methods("PUT")
 	r.HandleFunc("/lists", DeleteListEndPoint).Methods("DELETE")
 	r.HandleFunc("/lists/{id}", FindListEndpoint).Methods("GET")
-	if err := http.ListenAndServe(":3000", r); err != nil {
+	if err := http.ListenAndServe(":"+os.Getenv("PORT"), r); err != nil {
 		log.Fatal(err)
 	}
 }
